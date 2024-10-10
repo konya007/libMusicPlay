@@ -2,6 +2,8 @@
 
 MusicPlayer là một ứng dụng phát nhạc đơn giản được xây dựng bằng JavaScript. Ứng dụng này cho phép bạn phát, tạm dừng, dừng, chuyển bài hát và hiển thị thông tin bài hát lên thanh phương tiện.
 
+[Demo](https://konya007.github.io/libMusicPlay/)
+
 ## Tính năng
 
 - Phát, tạm dừng và dừng nhạc.
@@ -16,9 +18,9 @@ MusicPlayer là một ứng dụng phát nhạc đơn giản được xây dựn
     git clone https://github.com/yourusername/MusicPlayer.git
     ```
 
-2. Điều hướng đến thư mục dự án:
-    ```sh
-    cd MusicPlayer
+2. Dán thẳng vào đầu trang chính
+    ```html
+    <script src="https://raw.githubusercontent.com/konya007/libMusicPlay/refs/heads/main/MusicPlayer.js"></script>
     ```
 
 3. Mở tệp `index.html` trong trình duyệt của bạn để chạy ứng dụng.
@@ -163,6 +165,8 @@ Dưới đây là ví dụ hoàn chỉnh về cách sử dụng `MusicPlayer` v�
         player.setSongs([song1, song2]);
         player.init();
     </script>
+
+    
 </body>
 </html>
 ```
