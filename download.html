@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+
+</head>
+  <body>
+    <input type="text">
+    <button id="Download">Submit</button>
+    <audio src="" controls>
+
+    </audio>
+    <div class="info">
+
+    </div>
+    <button id="Refresh">Refresh</button>
+    <ul>
+      
+    </ul>
+
+    <script>
+      const button = document.querySelector('#Download');
+      const input = document.querySelector('input');
+      const audio = document.querySelector('audio');
+      const info = document.querySelector('.info');
+      const refresh = document.querySelector('#Refresh');
+      const ul = document.querySelector('ul');
+
+      button.addEventListener('click', () => {
+        button.disabled = true;
+        const text = input.value;
+        fetch(`https://tall-alisa-riikon-94c51ec1.koyeb.app/audio?url=${input.value}`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          const audioSrc = data.mp3_url
+          info.textContent =JSON.stringify(data, null, 2);
+          audio.src = "https://tall-alisa-riikon-94c51ec1.koyeb.app"+audioSrc;
+          audio.play();
+          button.disabled = false;
+        })
+        .catch(err => {     
+          console.log(err);
+          button.disabled = false;
+        })
+          
+      });
+
+
+      refresh.addEventListener('click', () => {
+        fetch(`https://tall-alisa-riikon-94c51ec1.koyeb.app/list`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          ul.innerHTML = '';
+          data.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML= `
+              ${item.title} - ${item.uploader}    
+            `;
+            li.onclick = () => {
+              audio.src = "https://tall-alisa-riikon-94c51ec1.koyeb.app"+item.mp3_url;
+              // button.click();
+            }
+            ul.appendChild(li);
+          })
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      })
+    </script>
+  </body>
+</html>

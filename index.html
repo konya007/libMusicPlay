@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class=player_bg_cover style="
+background-attachment: fixed; background-size: cover;
+">
+    <h1 class="player_title"></h1>
+    <h3 class="player_artist"></h3>
+    
+
+    <div id="player_controls">
+        <button class="player_pp">
+            <!-- <i class="fa-solid fa-play"></i>
+            <i class="fa-solid fa-pause"></i> -->
+        </button>
+        <button class="player_stop">
+            <i class="fa-solid fa-stop"></i>
+        </button>
+        <button class="player_next">
+            <i class="fa-solid fa-forward-step"></i>
+        </button>
+        <button class="player_prev">
+            <i class="fa-solid fa-backward-step"></i>
+        </button>
+        <button class="player_mode">
+            <i class="fa-solid fa-shuffle"></i>
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+            <i class="fa-solid fa-arrow-down-short-wide"></i>
+        </button>
+        <span class="player_currentTime" ></span> / <span class="player_duration" ></span>
+        <div>
+            <input type="range" id="player_seek_range" class="player_seek_range" min="0" max="100" value="0" step="1" >
+        </div>
+        <div>
+            <input type="range" id="player_seek_range2" class="player_seek_range" min="0" max="100" value="0" step="1" style="width: 100%;">
+        </div>
+
+        <input type="range" id="player_volume_range" class="player_volume_range" min="0" max="100" value="100" step="1">
+    </div>
+
+    <div class="player_progress">
+        <div></div>
+    </div>
+
+    <style>
+        *{
+            transition: all 0.5s;
+        }
+
+        .player_progress{
+            width: 100%;
+            height: 5px;
+            background-color: #ccc;
+            position: relative;
+            border: 1px solid #000;
+        }
+
+        .player_progress div{
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background-color: #ff0000;
+        }
+    </style>
+
+    <script src="./MusicPlayer.js"></script>
+
+    <script>
+        const player = new MusicPlayer();
+        async function main() {
+            const songs = await getSongs().then(data => {
+                return data.map(song => {
+                    return new Song(
+                        song.title, 
+                        song.uploader, 
+                        "https://tall-alisa-riikon-94c51ec1.koyeb.app"+song.mp3_url,
+                        song.thumbnail
+                    );
+                });
+            });
+            player.setSongs(songs);  
+            player.init();          
+        }
+
+        async function getSongs() {
+            return await fetch("https://tall-alisa-riikon-94c51ec1.koyeb.app/list", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                return data;
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
+        main()
+    </script>
+</body>
+</html>
