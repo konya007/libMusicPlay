@@ -35,6 +35,17 @@
 // - previous(): chuyển bài trước đó
 // - updateInfo(): cập nhật thông tin bài hát
 
+// Các sự kiện:
+// - ready: sẵn sàng chơi nhạc
+// - play: bắt đầu chơi nhạc
+// - pause: tạm dừng nhạc
+// - stop: dừng nhạc
+// - next: chuyển bài tiếp theo
+// - previous: chuyển bài trước đó
+// - update: cập nhật thông tin bài hát
+
+// Các bắt sự kiện:
+// Obj.on('eventName', callback): bắt sự kiện eventName, gọi callback khi sự kiện xảy ra
 
 class MusicPlayer extends Audio {
     constructor(){
@@ -61,6 +72,7 @@ class MusicPlayer extends Audio {
         } else {
             console.error("Index out of range")
         }
+        
     }
 
     updateInfo() {
@@ -83,6 +95,7 @@ class MusicPlayer extends Audio {
         bgCover.forEach(c => {
             c.style.backgroundImage = `url(${this.currentSong.cover})` 
         })
+        this.trigger('update')
     }
 
     setSongs(playlist) {
@@ -190,6 +203,7 @@ class MusicPlayer extends Audio {
                 fill.style.width = `${(this.currentTime / this.duration) * 100}%`
             })
         },100)
+        this.trigger('ready')
     }
 
     play(){
@@ -218,22 +232,24 @@ class MusicPlayer extends Audio {
             navigator.mediaSession.setActionHandler('nexttrack', () => this.next());
             navigator.mediaSession.setActionHandler('stop', () => this.stop);
         }
+        this.trigger('play')
     }
 
     pause(){
         super.pause()
         this.isPlaying = false
         const playButton = document.querySelectorAll('.player_pp')
-            playButton.forEach(button => {
-                button.innerHTML = '<i class="fas fa-play"></i>'
-            })
+        playButton.forEach(button => {
+            button.innerHTML = '<i class="fas fa-play"></i>'
+        })
+        this.trigger('pause')
     }
 
     stop(){
         this.pause()
         this.currentTime = 0
         this.isPlaying = false
-        
+        this.trigger('stop')
     }
 
     next(){
@@ -248,6 +264,7 @@ class MusicPlayer extends Audio {
             this.play()
         }
         this.updateInfo()
+        this.trigger('next')
     }
 
     previous(){
@@ -262,12 +279,25 @@ class MusicPlayer extends Audio {
             this.play()
         }
         this.updateInfo()
+        this.trigger('previous')
     }
 
     addSong(...song){
         this.songs.push(song)
     }
 
+    on(ev, callback) {
+        if (!this.events) {
+            this.events = {};
+        }
+        this.events[ev] = callback;
+    }
+    
+    trigger(ev) {
+        if (this.events && typeof this.events[ev] === 'function') {
+            this.events[ev]();
+        }
+    }
     
 }
 
@@ -280,3 +310,5 @@ class Song{
     }
 
 }
+
+

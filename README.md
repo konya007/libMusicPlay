@@ -105,6 +105,57 @@ player.pause();
 player.stop();
 ```
 
+
+### Cập nhật các sự kiện
+
+MusicPlayer hỗ trợ nhiều sự kiện khác nhau để bạn có thể bắt và xử lý khi chúng xảy ra.
+
+`ready`: sẵn sàng chơi nhạc
+`play`: bắt đầu chơi nhạc
+`pause`: tạm dừng nhạc
+`stop`: dừng nhạc
+`next`: chuyển bài tiếp theo
+`previous`: chuyển bài trước đó
+`update`: cập nhật thông tin bài hát
+
+Cách bắt sự kiện:
+```js
+Obj.on('eventName', callback) // bắt sự kiện eventName, gọi callback khi sự kiện xảy ra
+```
+
+Ví dụ:
+
+```js
+player.on('ready', () => {
+    console.log('Player is ready');
+});
+
+player.on('play', () => {
+    console.log('Music started playing');
+});
+
+player.on('pause', () => {
+    console.log('Music paused');
+});
+
+player.on('stop', () => {
+    console.log('Music stopped');
+});
+
+player.on('next', () => {
+    console.log('Playing next song');
+});
+
+player.on('previous', () => {
+    console.log('Playing previous song');
+});
+
+player.on('update', (song) => {
+    console.log('Song info updated', song);
+});
+```
+
+
 ### Ví dụ hoàn chỉnh
 Dưới đây là ví dụ hoàn chỉnh về cách sử dụng `MusicPlayer` và `Song`:
 ```html
