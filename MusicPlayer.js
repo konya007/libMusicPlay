@@ -61,14 +61,12 @@ class MusicPlayer extends Audio {
         return this.isPlaying
     }
 
-
-
     playIndex(index = 0) {
         if (index < this.songs.length && index >= 0) {
             this.currentSong = this.songs[index]
             this.src = this.currentSong.src
             this.play()
-            updateInfo()
+            this.updateInfo()
         } else {
             console.error("Index out of range")
         }
@@ -151,16 +149,30 @@ class MusicPlayer extends Audio {
         })
 
         const volumeSlider = document.querySelectorAll('.player_volume_range')
+        
         volumeSlider.forEach(slider => {
-            slider.value = this.volume * slider.max
+            slider.max = 1
+            slider.step = 0.01
+            slider.value = this.volume
             slider.addEventListener('input', () => {
-                this.volume = slider.value / slider.max
+                this.volume = slider.value 
                 this.volume = this.volume.toFixed(2)
             })
         })
         
 
         const seekSlider = document.querySelectorAll('.player_seek_range')
+        seekSlider.forEach(slider => {
+            slider.max = this.duration*10
+            slider.value = this.currentTime*10
+            slider.addEventListener('input', () => {
+                this.currentTime = slider.value/10
+            })
+            slider.addEventListener('mousemove', (e) => {
+                let s = (e.offsetX / slider.offsetWidth)*this.duration
+                slider.title = new Date(s*1000).toUTCString().slice(17,25)
+            })
+        })
         const duration = document.querySelectorAll('.player_duration')
         const currentTime = document.querySelectorAll('.player_currentTime')
         const progress = document.querySelectorAll('.player_progress')
@@ -180,16 +192,13 @@ class MusicPlayer extends Audio {
 
 
         this.loop = setInterval(() => {
-            if (this.currentTime >= this.duration-0.2){
+            if (this.currentTime >= this.duration-0.2 && this.isPlaying){
                 this.next()
             }
 
             seekSlider.forEach(slider => { 
-                slider.max = this.duration
-                slider.value = this.currentTime
-                slider.addEventListener('input', () => {
-                    this.currentTime = slider.value
-                })
+                slider.max = this.duration*10
+                slider.value = this.currentTime*10
             })
            
             duration.forEach((d )=> {
@@ -215,7 +224,7 @@ class MusicPlayer extends Audio {
             })
         } 
         this.isPlaying = true  
-        this.updateInfo()
+        // this.updateInfo()
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: this.currentSong.title,
@@ -302,11 +311,12 @@ class MusicPlayer extends Audio {
 }
 
 class Song{
-    constructor(title, artist, url, cover){
+    constructor(id, title, artist, url, cover){
         this.title = title ?? "Unknown"
         this.artist = artist ?? "Unknown"
         this.src = url ?? null
-        this.cover = cover ?? "https://png.pngtree.com/png-vector/20231016/ourmid/pngtree-vinyl-disc-png-image_10188179.png"
+        this.cover = cover ?? "https://png.pngtree.com/png-vector/20231016/ourmid/pngtree-vinyl-disc-png-image_10188179.png",
+        this.id = id ?? "0"
     }
 
 }
