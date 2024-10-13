@@ -311,12 +311,21 @@ class MusicPlayer extends Audio {
 }
 
 class Song{
-    constructor(id, title, artist, url, cover){
+    constructor(id, title, artist, url, cover, ){
         this.title = title ?? "Unknown"
         this.artist = artist ?? "Unknown"
         this.src = url ?? null
         this.cover = cover ?? "https://png.pngtree.com/png-vector/20231016/ourmid/pngtree-vinyl-disc-png-image_10188179.png",
         this.id = id ?? "0"
+    }
+
+    getDuration(){
+        return new Promise((resolve, reject) => {
+            let audio = new Audio(this.src)
+            audio.onloadedmetadata = () => {
+                resolve(audio.duration)
+            }
+        })
     }
 
 }

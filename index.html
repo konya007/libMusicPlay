@@ -78,6 +78,7 @@ background-attachment: fixed; background-size: cover;
             const songs = await getSongs().then(data => {
                 return data.map(song => {
                     return new Song(
+                        song.id,
                         song.title, 
                         song.uploader, 
                         "https://tall-alisa-riikon-94c51ec1.koyeb.app"+song.mp3_url,
